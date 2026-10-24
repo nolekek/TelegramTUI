@@ -1,0 +1,14 @@
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# Portable data directory
+.data/
+dist/
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.iml

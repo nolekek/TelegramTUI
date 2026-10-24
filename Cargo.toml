@@ -1,0 +1,33 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/tg-core",
+    "crates/tg-tui",
+    "tools/fetch-tdlib",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Telegram TUI Team"]
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+tokio = { version = "1.38", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+tracing-appender = "0.2"
+libloading = "0.8"
+ratatui = "0.29"
+crossterm = { version = "0.28", features = ["event-stream"] }
+toml = "0.8"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream", "json"] }
+parking_lot = "0.12"
+chrono = { version = "0.4", features = ["serde"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
+rodio = { version = "0.20", default-features = false, features = ["vorbis", "flac", "wav"] }
+dirs = "5.0"
+
