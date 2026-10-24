@@ -432,7 +432,7 @@ async fn test_e2e_tdlib_dynamic_loading_and_fallback() {
 
     // 3. Verify TDLib mode (use_mock = false):
     // When tdjson dynamic library is present, verify it connects to Telegram and reaches WaitPhoneNumber.
-    // When tdjson is not installed, verify graceful fallback.
+    // When tdjson is not installed, verify graceful typed LibraryNotFound error.
     let tdjson_present = TdJsonRaw::load_auto(None).is_ok();
     let temp_data = std::env::temp_dir().join(format!("tg_tdlib_test_{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos()));
     let config = Config {
@@ -441,62 +441,36 @@ async fn test_e2e_tdlib_dynamic_loading_and_fallback() {
         ..Default::default()
     };
 
-    let (handle, _event_rx) = Engine::start(config)
-        .await
-        .expect("Engine::start with use_mock=false must successfully start");
-
-    // Verify engine is fully functional and responsive
-    let initial_auth = wait_for_auth_state(
-        &handle,
-        |s| matches!(s, AuthState::WaitPhoneNumber | AuthState::WaitQrCode(_)),
-        Duration::from_secs(5),
-    )
-    .await;
-    println!("test_e2e_tdlib_dynamic_loading_and_fallback initial_auth: {:?}", initial_auth);
-    assert!(
-        matches!(initial_auth, AuthState::WaitPhoneNumber | AuthState::WaitQrCode(_)),
-        "Engine should reach WaitPhoneNumber or WaitQrCode, but got: {:?}",
-        initial_auth
-    );
-
-    if !tdjson_present {
-        // Perform auth in fallback mode
-        handle
-            .send_phone_number("+19990001111")
+    if tdjson_present {
+        let (handle, _event_rx) = Engine::start(config)
             .await
-            .expect("send_phone_number failed");
+            .expect("Engine::start with use_mock=false must successfully start when tdjson is present");
 
-        let wait_code = wait_for_auth_state(
+        // Verify engine is fully functional and responsive
+        let initial_auth = wait_for_auth_state(
             &handle,
-            |s| matches!(s, AuthState::WaitCode(_)),
-            Duration::from_secs(3),
+            |s| matches!(s, AuthState::WaitPhoneNumber | AuthState::WaitQrCode(_)),
+            Duration::from_secs(5),
         )
         .await;
-        assert!(matches!(wait_code, AuthState::WaitCode(_)));
+        println!("test_e2e_tdlib_dynamic_loading_and_fallback initial_auth: {:?}", initial_auth);
+        assert!(
+            matches!(initial_auth, AuthState::WaitPhoneNumber | AuthState::WaitQrCode(_)),
+            "Engine should reach WaitPhoneNumber or WaitQrCode, but got: {:?}",
+            initial_auth
+        );
 
-        handle
-            .send_code("11111")
-            .await
-            .expect("send_code failed");
-
-        let ready = wait_for_auth_state(
-            &handle,
-            |s| matches!(s, AuthState::Ready),
-            Duration::from_secs(3),
-        )
-        .await;
-        assert!(matches!(ready, AuthState::Ready));
-
-        // Verify state populated
-        let chats_ready = wait_for_condition(Duration::from_secs(3), || {
-            handle.read_state().ordered_chats().len() >= 4
-        })
-        .await;
-        assert!(chats_ready);
+        // Clean termination
+        handle.stop().await.expect("Failed to stop engine");
+    } else {
+        // If tdjson dynamic library is absent, Engine::start must return typed LibraryNotFound error
+        let start_res = Engine::start(config).await;
+        assert!(start_res.is_err(), "Engine::start without mock must fail if tdjson is absent");
+        match start_res.err().unwrap() {
+            CoreError::LibraryNotFound(_) => {}
+            other => panic!("Expected LibraryNotFound error, got {:?}", other),
+        }
     }
-
-    // Clean termination
-    handle.stop().await.expect("Failed to stop engine");
 }
 
 // ============================================================================

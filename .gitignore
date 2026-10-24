@@ -4,8 +4,13 @@ Cargo.lock
 
 # Portable data directory
 .data/
+crates/*/.data/
 dist/
 *.zip
+
+# Local tooling & cargo config
+.cargo/
+zig-linker*.cmd
 
 # IDE
 .idea/

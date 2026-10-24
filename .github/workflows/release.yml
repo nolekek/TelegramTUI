@@ -37,11 +37,11 @@ jobs:
       - name: Cache Cargo Dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: Build Release Binary
-        run: cargo build --release --target ${{ matrix.target }} -p tg-tui
-
       - name: Fetch TDLib Binaries
         run: cargo run -p fetch-tdlib
+
+      - name: Build Release Binary
+        run: cargo build --release --target ${{ matrix.target }} -p tg-tui
 
       - name: Package Linux
         if: matrix.os == 'ubuntu-latest'

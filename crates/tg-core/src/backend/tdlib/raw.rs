@@ -55,6 +55,7 @@ impl TdJsonRaw {
             candidates.push(PathBuf::from(".data").join(name));
             candidates.push(PathBuf::from("..").join(".data").join(name));
             candidates.push(PathBuf::from("../..").join(".data").join(name));
+            candidates.push(PathBuf::from("crates/tg-core/.data").join(name));
             // Current directory
             candidates.push(PathBuf::from(name));
             // Next to current executable and parent directory of exe
