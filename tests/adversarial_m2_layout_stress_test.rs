@@ -357,7 +357,7 @@ async fn test_event_multiplexer_high_load_bursts() {
 #[tokio::test]
 async fn test_event_handler_tokio_broadcast_lag_resilience() {
     let (tx, rx) = broadcast::channel(16);
-    let mut handler = EventHandler::new(rx, Duration::from_millis(10));
+    let mut handler = EventHandler::new_headless(rx, Duration::from_millis(10));
 
     // Flood the channel with 100 events while handler is not polling
     for i in 0..100 {

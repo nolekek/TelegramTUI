@@ -12,7 +12,7 @@ pub enum AppEvent {
 }
 
 pub struct EventHandler {
-    term_stream: EventStream,
+    term_stream: Option<EventStream>,
     core_rx: broadcast::Receiver<CoreEvent>,
     tick_interval: tokio::time::Interval,
 }
@@ -20,7 +20,15 @@ pub struct EventHandler {
 impl EventHandler {
     pub fn new(core_rx: broadcast::Receiver<CoreEvent>, tick_rate: Duration) -> Self {
         Self {
-            term_stream: EventStream::new(),
+            term_stream: Some(EventStream::new()),
+            core_rx,
+            tick_interval: tokio::time::interval(tick_rate),
+        }
+    }
+
+    pub fn new_headless(core_rx: broadcast::Receiver<CoreEvent>, tick_rate: Duration) -> Self {
+        Self {
+            term_stream: None,
             core_rx,
             tick_interval: tokio::time::interval(tick_rate),
         }
@@ -28,25 +36,43 @@ impl EventHandler {
 
     /// Retrieve the next unified event across terminal input and core broadcast stream.
     pub async fn next(&mut self) -> Option<AppEvent> {
-        tokio::select! {
-            maybe_term = self.term_stream.next() => {
-                match maybe_term {
-                    Some(Ok(evt)) => Some(AppEvent::Terminal(evt)),
-                    _ => None,
-                }
-            }
-            core_res = self.core_rx.recv() => {
-                match core_res {
-                    Ok(evt) => Some(AppEvent::Core(evt)),
-                    Err(broadcast::error::RecvError::Lagged(skipped)) => {
-                        tracing::warn!("TUI core event receiver lagged by {} events; continuing", skipped);
-                        Some(AppEvent::Tick)
+        if let Some(ref mut stream) = self.term_stream {
+            tokio::select! {
+                maybe_term = stream.next() => {
+                    match maybe_term {
+                        Some(Ok(evt)) => Some(AppEvent::Terminal(evt)),
+                        _ => None,
                     }
-                    Err(broadcast::error::RecvError::Closed) => None,
+                }
+                core_res = self.core_rx.recv() => {
+                    match core_res {
+                        Ok(evt) => Some(AppEvent::Core(evt)),
+                        Err(broadcast::error::RecvError::Lagged(skipped)) => {
+                            tracing::warn!("TUI core event receiver lagged by {} events; continuing", skipped);
+                            Some(AppEvent::Tick)
+                        }
+                        Err(broadcast::error::RecvError::Closed) => None,
+                    }
+                }
+                _ = self.tick_interval.tick() => {
+                    Some(AppEvent::Tick)
                 }
             }
-            _ = self.tick_interval.tick() => {
-                Some(AppEvent::Tick)
+        } else {
+            tokio::select! {
+                core_res = self.core_rx.recv() => {
+                    match core_res {
+                        Ok(evt) => Some(AppEvent::Core(evt)),
+                        Err(broadcast::error::RecvError::Lagged(skipped)) => {
+                            tracing::warn!("TUI core event receiver lagged by {} events; continuing", skipped);
+                            Some(AppEvent::Tick)
+                        }
+                        Err(broadcast::error::RecvError::Closed) => None,
+                    }
+                }
+                _ = self.tick_interval.tick() => {
+                    Some(AppEvent::Tick)
+                }
             }
         }
     }
