@@ -1,4 +1,5 @@
 pub mod auth;
+pub mod help;
 pub mod image_viewer;
 pub mod proxy;
 pub mod settings;

@@ -45,6 +45,22 @@ pub enum MessageContent {
         width: i32,
         height: i32,
     },
+    Video {
+        caption: String,
+        file_name: String,
+        duration: i32,
+        width: i32,
+        height: i32,
+        file_id: i32,
+        file_size: u64,
+        supports_streaming: bool,
+    },
+    VideoNote {
+        duration: i32,
+        length: i32,
+        file_id: i32,
+        file_size: u64,
+    },
     Document {
         caption: String,
         file_name: String,
@@ -76,6 +92,8 @@ impl MessageContent {
     pub fn file_id(&self) -> Option<i32> {
         match self {
             MessageContent::Photo { file_id, .. } => Some(*file_id),
+            MessageContent::Video { file_id, .. } => Some(*file_id),
+            MessageContent::VideoNote { file_id, .. } => Some(*file_id),
             MessageContent::Document { file_id, .. } => Some(*file_id),
             MessageContent::Voice { file_id, .. } => Some(*file_id),
             MessageContent::Audio { file_id, .. } => Some(*file_id),

@@ -4,6 +4,7 @@ pub struct CliArgs {
     pub portable: bool,
     pub config_path: Option<PathBuf>,
     pub data_dir: Option<PathBuf>,
+    pub downloads_dir: Option<PathBuf>,
     pub mock: bool,
 }
 
@@ -13,6 +14,7 @@ impl CliArgs {
         let mut portable = false;
         let mut config_path = None;
         let mut data_dir = None;
+        let mut downloads_dir = None;
         let mut mock = false;
 
         let mut i = 1;
@@ -50,6 +52,15 @@ impl CliArgs {
                         std::process::exit(1);
                     }
                 }
+                "--download-dir" | "--downloads-dir" => {
+                    if i + 1 < args.len() {
+                        downloads_dir = Some(PathBuf::from(&args[i + 1]));
+                        i += 1;
+                    } else {
+                        eprintln!("Error: --download-dir requires a path argument");
+                        std::process::exit(1);
+                    }
+                }
                 unknown if unknown.starts_with('-') => {
                     eprintln!("Error: unknown option '{unknown}'");
                     eprintln!("Try 'tg-tui --help' for more information.");
@@ -64,6 +75,7 @@ impl CliArgs {
             portable,
             config_path,
             data_dir,
+            downloads_dir,
             mock,
         }
     }
@@ -82,6 +94,7 @@ fn print_help() {
     println!("    -p, --portable           Force portable mode (stores all data in ./.data)");
     println!("    -c, --config <PATH>      Use custom path for config.toml");
     println!("    -d, --data-dir <PATH>    Use custom directory for session data and cache");
+    println!("    --download-dir <PATH>    Use custom directory for permanently saved downloads");
     println!("    --mock                   Run with offline mock backend for testing");
     println!();
     println!("DEFAULT STORAGE LOCATIONS:");

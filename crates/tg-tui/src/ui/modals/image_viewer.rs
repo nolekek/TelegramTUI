@@ -109,7 +109,9 @@ pub fn render_image_viewer(frame: &mut Frame, state: &ImageViewerState, area: Re
         Span::styled("[Esc / q] ", Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)),
         Span::styled("Close  ", Style::default().fg(Color::DarkGray)),
         Span::styled("[o] ", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)),
-        Span::styled("Open in Desktop App  ", Style::default().fg(Color::DarkGray)),
+        Span::styled("Desktop  ", Style::default().fg(Color::DarkGray)),
+        Span::styled("[Ctrl+S / s] ", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+        Span::styled("Save to Downloads", Style::default().fg(Color::DarkGray)),
     ]));
 
     let footer_p = Paragraph::new(footer_lines)

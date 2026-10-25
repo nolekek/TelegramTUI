@@ -13,6 +13,7 @@ pub fn render_auth_modal(
     frame: &mut Frame,
     auth_state: &AuthState,
     auth_modal: &AuthModalState,
+    error_msg: Option<&str>,
     screen: Rect,
 ) {
     if screen.width < 10 || screen.height < 6 {
@@ -133,6 +134,13 @@ pub fn render_auth_modal(
                     Span::styled(format!("{}_", auth_modal.input_buffer), Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
                 ]),
                 Line::default(),
+                if let Some(err) = error_msg {
+                    Line::from(vec![
+                        Span::styled(format!("⚠ {}", err), Style::default().fg(Color::LightRed).add_modifier(Modifier::BOLD)),
+                    ])
+                } else {
+                    Line::default()
+                },
                 Line::from(vec![
                     Span::styled("[Enter] ", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)),
                     Span::raw("Next  |  "),
@@ -194,6 +202,13 @@ pub fn render_auth_modal(
                 Line::default(),
                 Line::from(digit_boxes),
                 Line::default(),
+                if let Some(err) = error_msg {
+                    Line::from(vec![
+                        Span::styled(format!("⚠ {}", err), Style::default().fg(Color::LightRed).add_modifier(Modifier::BOLD)),
+                    ])
+                } else {
+                    Line::default()
+                },
                 Line::from(vec![
                     Span::styled("Mock tip: '11111' to login  |  '22222' to test 2FA password", Style::default().fg(Color::DarkGray)),
                 ]),

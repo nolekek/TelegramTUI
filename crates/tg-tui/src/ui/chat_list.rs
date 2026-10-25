@@ -320,6 +320,8 @@ pub fn render_chat_list(
                             }
                         }
                         MessageContent::Photo { .. } => "[Photo]".to_string(),
+                        MessageContent::Video { .. } => "[Video]".to_string(),
+                        MessageContent::VideoNote { .. } => "[Video Note]".to_string(),
                         MessageContent::Document { file_name, .. } => {
                             format!("[Doc: {}]", file_name)
                         }
@@ -563,6 +565,8 @@ pub fn render_chat_search(
                             }
                         }
                         MessageContent::Photo { .. } => " — 📷 [Фото]".to_string(),
+                        MessageContent::Video { .. } => " — 🎬 [Видео]".to_string(),
+                        MessageContent::VideoNote { .. } => " — 🎥 [Видеосообщение]".to_string(),
                         MessageContent::Voice { .. } => " — 🎤 [Голосовое]".to_string(),
                         MessageContent::Audio { .. } => " — 🎵 [Аудио]".to_string(),
                         MessageContent::Document { file_name, .. } => format!(" — 📄 [{}]", file_name),

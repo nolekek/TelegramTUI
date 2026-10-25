@@ -162,6 +162,17 @@ impl MockBackend {
                         width: 1280,
                         height: 720,
                     }
+                } else if chat_id == ChatId(3) && m_idx == 8 {
+                    MessageContent::Video {
+                        caption: "Demo video walk-through".to_string(),
+                        file_name: "demo_walkthrough.mp4".to_string(),
+                        duration: 85,
+                        width: 1920,
+                        height: 1080,
+                        file_id: 302,
+                        file_size: 15_400_000,
+                        supports_streaming: true,
+                    }
                 } else if chat_id == ChatId(4) && m_idx == 5 {
                     MessageContent::Voice {
                         caption: "Message from Pavel".to_string(),
@@ -204,6 +215,7 @@ impl MockBackend {
             FileInfo::new(101, 1_843_200, 1_843_200), // Document in Chat 1
             FileInfo::new(201, 4_718_592, 4_718_592), // Audio in Chat 2
             FileInfo::new(301, 2_400_000, 2_400_000), // Photo in Chat 3
+            FileInfo::new(302, 15_400_000, 15_400_000), // Video in Chat 3
             FileInfo::new(401, 262_144, 262_144),     // Voice in Chat 4
             FileInfo::new(501, 65_536, 65_536),       // Sticker in Chat 2
         ];
@@ -228,13 +240,16 @@ impl TelegramBackend for MockBackend {
     }
 
     fn send_phone_number(&self, phone: &str) -> BoxFuture<'_, ()> {
-        if phone.trim().is_empty() {
+        let mut cleaned: String = phone.chars().filter(|c| c.is_ascii_digit() || *c == '+').collect();
+        if !cleaned.starts_with('+') && !cleaned.is_empty() {
+            cleaned = format!("+{}", cleaned);
+        }
+        if cleaned.is_empty() {
             self.emit(CoreEvent::AuthStateChanged(AuthState::WaitPhoneNumber));
             return Box::pin(async move { Ok(()) });
         }
-        let phone = phone.to_string();
         self.emit(CoreEvent::AuthStateChanged(AuthState::WaitCode(CodeInfo {
-            phone_number: phone,
+            phone_number: cleaned,
             timeout: 60,
             code_type: "telegram_message".to_string(),
             next_type: Some("sms".to_string()),

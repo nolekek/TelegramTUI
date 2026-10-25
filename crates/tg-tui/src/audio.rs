@@ -149,6 +149,11 @@ impl AudioPlayer {
         *self.current.lock() = None;
     }
 
+    /// Returns true if audio is currently actively playing.
+    pub fn is_playing(&self) -> bool {
+        self.is_playing.load(Ordering::SeqCst)
+    }
+
     /// Check if audio is currently playing and return status display string if so.
     pub fn current_status(&self) -> Option<String> {
         if !self.is_playing.load(Ordering::SeqCst) {

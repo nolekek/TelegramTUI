@@ -222,21 +222,133 @@ fn test_parse_sticker_message() {
 }
 
 #[test]
-fn test_parse_unsupported_content_fallback() {
+fn test_parse_video_message() {
+    let json = json!({
+        "@type": "messageVideo",
+        "caption": {
+            "@type": "formattedText",
+            "text": "Product demo reel"
+        },
+        "video": {
+            "@type": "video",
+            "duration": 65,
+            "width": 1920,
+            "height": 1080,
+            "file_name": "demo_reel.mp4",
+            "mime_type": "video/mp4",
+            "supports_streaming": true,
+            "video": {
+                "@type": "file",
+                "id": 5001,
+                "size": 15728640
+            }
+        }
+    });
+
+    let content = TDLibBackend::parse_message_content(&json);
+    match content {
+        MessageContent::Video {
+            caption,
+            file_name,
+            duration,
+            width,
+            height,
+            file_id,
+            file_size,
+            supports_streaming,
+        } => {
+            assert_eq!(caption, "Product demo reel");
+            assert_eq!(file_name, "demo_reel.mp4");
+            assert_eq!(duration, 65);
+            assert_eq!(width, 1920);
+            assert_eq!(height, 1080);
+            assert_eq!(file_id, 5001);
+            assert_eq!(file_size, 15728640);
+            assert!(supports_streaming);
+        }
+        other => panic!("Expected MessageContent::Video, got {:?}", other),
+    }
+}
+
+#[test]
+fn test_parse_video_note_message() {
     let json = json!({
         "@type": "messageVideoNote",
         "video_note": {
-            "duration": 10
+            "@type": "videoNote",
+            "duration": 20,
+            "length": 320,
+            "video": {
+                "@type": "file",
+                "id": 6001,
+                "size": 2097152
+            }
+        }
+    });
+
+    let content = TDLibBackend::parse_message_content(&json);
+    match content {
+        MessageContent::VideoNote {
+            duration,
+            length,
+            file_id,
+            file_size,
+        } => {
+            assert_eq!(duration, 20);
+            assert_eq!(length, 320);
+            assert_eq!(file_id, 6001);
+            assert_eq!(file_size, 2097152);
+        }
+        other => panic!("Expected MessageContent::VideoNote, got {:?}", other),
+    }
+}
+
+#[test]
+fn test_parse_unsupported_content_fallback() {
+    let json = json!({
+        "@type": "messageDice",
+        "dice": {
+            "value": 6
         }
     });
 
     let content = TDLibBackend::parse_message_content(&json);
     match content {
         MessageContent::Unsupported { raw_type } => {
-            assert_eq!(raw_type, "messageVideoNote");
+            assert_eq!(raw_type, "messageDice");
         }
         other => panic!("Expected MessageContent::Unsupported, got {:?}", other),
     }
+}
+
+#[test]
+fn test_cache_cleanup_and_downloads_isolation() {
+    let base_dir = std::env::temp_dir().join(format!("tgtui_test_cache_{}", std::process::id()));
+    let mut config = Config::default();
+    config.data_dir = base_dir.clone();
+    config.ensure_directories().expect("ensure directories");
+
+    let cache_dir = config.cache_media_path();
+    let downloads_dir = config.downloads_path();
+
+    assert!(cache_dir.exists());
+    assert!(downloads_dir.exists());
+
+    let cache_file = cache_dir.join("cached_image.png");
+    let downloaded_file = downloads_dir.join("saved_document.pdf");
+
+    std::fs::write(&cache_file, b"cached image data").unwrap();
+    std::fs::write(&downloaded_file, b"saved document data").unwrap();
+
+    assert!(cache_file.exists());
+    assert!(downloaded_file.exists());
+
+    config.clean_media_cache().expect("clean cache");
+
+    assert!(!cache_file.exists(), "Temporary cached media must be deleted on cleanup");
+    assert!(downloaded_file.exists(), "Permanently saved files in downloads/ must NOT be deleted");
+
+    let _ = std::fs::remove_dir_all(&base_dir);
 }
 
 #[test]

@@ -73,11 +73,11 @@ pub fn render_status_bar(
     };
 
     let hint_text = match navigation_mode {
-        NavigationMode::Classic => "[↑/↓] Скролл  [Ctrl+F / Esc] Поиск чатов  [F2] Настройки  [F4] Vim режим",
+        NavigationMode::Classic => "[↑/↓] Скролл  [Ctrl+S] Скачать  [Ctrl+F / Esc] Поиск чатов  [F1] Справка  [F2] Настройки",
         NavigationMode::Vim => match vim_mode {
-            VimMode::Normal => "[/ / s] Поиск  [j/k] Скролл  [i/Enter] Написать  [r] Ответ  [dd] Удалить  [Esc] К чатам  [:] Меню",
+            VimMode::Normal => "[Enter/o] Открыть медиа  [Ctrl+S/D] Скачать  [i] Написать  [r] Ответ  [Esc] К чатам  [F1] Справка",
             VimMode::Insert => "[Enter] Отправить  [Esc] В обычный режим (Normal)  [Ctrl+F] Поиск чатов",
-            VimMode::Search => "[Enter] Открыть  [Ctrl+j/k] Выбор  [Esc] Назад",
+            VimMode::Search => "[Enter] Открыть  [Ctrl+j/k] Выбор  [[/]] Вкладки  [Esc] Назад",
             VimMode::Command => "[Enter] Выполнить  [Esc] Отмена  (:q выход, :find поиск, :w настройки)",
         },
     };

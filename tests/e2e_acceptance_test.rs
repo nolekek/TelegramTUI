@@ -341,7 +341,7 @@ async fn test_e2e_full_client_lifecycle_mock_mode() {
 
     drain_events_to_app(&mut app, &mut event_rx);
     assert!(
-        app.status_message.contains("Downloaded:"),
+        app.status_message.contains("Downloaded:") || app.status_message.contains("Загружено"),
         "Status should indicate file download completion, got: {}",
         app.status_message
     );

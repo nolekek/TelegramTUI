@@ -902,6 +902,81 @@ impl TDLibInner {
                     height,
                 }
             }
+            "messageVideo" => {
+                let caption = content_obj
+                    .get("caption")
+                    .and_then(|c| c.get("text"))
+                    .and_then(|t| t.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let video = content_obj.get("video");
+                let duration = video
+                    .and_then(|v| v.get("duration"))
+                    .and_then(|d| d.as_i64())
+                    .unwrap_or(0) as i32;
+                let width = video
+                    .and_then(|v| v.get("width"))
+                    .and_then(|w| w.as_i64())
+                    .unwrap_or(0) as i32;
+                let height = video
+                    .and_then(|v| v.get("height"))
+                    .and_then(|h| h.as_i64())
+                    .unwrap_or(0) as i32;
+                let file_name = video
+                    .and_then(|v| v.get("file_name"))
+                    .and_then(|f| f.as_str())
+                    .unwrap_or("video.mp4")
+                    .to_string();
+                let supports_streaming = video
+                    .and_then(|v| v.get("supports_streaming"))
+                    .and_then(|s| s.as_bool())
+                    .unwrap_or(false);
+                let video_file = video.and_then(|v| v.get("video"));
+                let file_id = video_file
+                    .and_then(|f| f.get("id"))
+                    .and_then(|id| id.as_i64())
+                    .unwrap_or(0) as i32;
+                let file_size = video_file
+                    .and_then(|f| f.get("size"))
+                    .and_then(|s| s.as_i64())
+                    .unwrap_or(0) as u64;
+                MessageContent::Video {
+                    caption,
+                    file_name,
+                    duration,
+                    width,
+                    height,
+                    file_id,
+                    file_size,
+                    supports_streaming,
+                }
+            }
+            "messageVideoNote" => {
+                let video_note = content_obj.get("video_note");
+                let duration = video_note
+                    .and_then(|v| v.get("duration"))
+                    .and_then(|d| d.as_i64())
+                    .unwrap_or(0) as i32;
+                let length = video_note
+                    .and_then(|v| v.get("length"))
+                    .and_then(|l| l.as_i64())
+                    .unwrap_or(0) as i32;
+                let video_file = video_note.and_then(|v| v.get("video"));
+                let file_id = video_file
+                    .and_then(|f| f.get("id"))
+                    .and_then(|id| id.as_i64())
+                    .unwrap_or(0) as i32;
+                let file_size = video_file
+                    .and_then(|f| f.get("size"))
+                    .and_then(|s| s.as_i64())
+                    .unwrap_or(0) as u64;
+                MessageContent::VideoNote {
+                    duration,
+                    length,
+                    file_id,
+                    file_size,
+                }
+            }
             "messageDocument" => {
                 let caption = content_obj
                     .get("caption")
@@ -1080,18 +1155,31 @@ impl TelegramBackend for TDLibBackend {
     }
 
     fn send_phone_number(&self, phone: &str) -> BoxFuture<'_, ()> {
+        let mut cleaned: String = phone.chars().filter(|c| c.is_ascii_digit() || *c == '+').collect();
+        if !cleaned.starts_with('+') && !cleaned.is_empty() {
+            cleaned = format!("+{}", cleaned);
+        }
+
         let req = json!({
             "@type": "setAuthenticationPhoneNumber",
-            "phone_number": phone
+            "phone_number": cleaned,
+            "settings": {
+                "@type": "phoneNumberAuthenticationSettings",
+                "allow_flash_call": false,
+                "allow_missed_call": false,
+                "is_current_phone_number": false,
+                "allow_sms_retriever_api": false
+            }
         });
         let inner = self.inner.clone();
         Box::pin(async move { inner.send_json(req) })
     }
 
     fn send_code(&self, code: &str) -> BoxFuture<'_, ()> {
+        let cleaned: String = code.chars().filter(|c| c.is_ascii_digit()).collect();
         let req = json!({
             "@type": "checkAuthenticationCode",
-            "code": code
+            "code": cleaned
         });
         let inner = self.inner.clone();
         Box::pin(async move { inner.send_json(req) })

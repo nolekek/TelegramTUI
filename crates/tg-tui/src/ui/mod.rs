@@ -17,8 +17,8 @@ use crate::app::{App, CurrentScreen, NavigationMode, VimMode};
 use crate::ui::chat_list::render_chat_search;
 use crate::ui::messages::render_messages;
 use crate::ui::modals::{
-    auth::render_auth_modal, image_viewer::render_image_viewer, proxy::render_proxy_modal,
-    settings::render_settings_modal, ActiveModal,
+    auth::render_auth_modal, help::render_help_modal, image_viewer::render_image_viewer,
+    proxy::render_proxy_modal, settings::render_settings_modal, ActiveModal,
 };
 use crate::ui::status_bar::render_status_bar;
 
@@ -111,7 +111,8 @@ pub fn render(frame: &mut Frame, app: &mut App) {
 
     // 2. In-TUI Auth Modal fallback if unauthenticated
     if state.auth_state != AuthState::Ready {
-        render_auth_modal(frame, &state.auth_state, &app.auth_modal_state, screen);
+        let err_opt = if app.is_status_error { Some(app.status_message.as_str()) } else { None };
+        render_auth_modal(frame, &state.auth_state, &app.auth_modal_state, err_opt, screen);
         render_status_bar(
             frame,
             app.navigation_mode,
@@ -239,6 +240,9 @@ pub fn render(frame: &mut Frame, app: &mut App) {
             if let Some(ref iv_state) = app.image_viewer_state {
                 render_image_viewer(frame, iv_state, screen);
             }
+        }
+        ActiveModal::Help => {
+            render_help_modal(frame, screen);
         }
         _ => {}
     }

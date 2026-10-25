@@ -12,6 +12,8 @@ pub struct Config {
     pub log_level: String,
     pub proxy: Option<ProxyConfig>,
     pub use_mock: bool,
+    #[serde(default)]
+    pub downloads_dir: Option<PathBuf>,
 }
 
 impl Default for Config {
@@ -25,6 +27,7 @@ impl Default for Config {
             log_level: "info".to_string(),
             proxy: None,
             use_mock: false, // Real Telegram by default
+            downloads_dir: None,
         }
     }
 }
@@ -124,9 +127,30 @@ impl Config {
         std::fs::create_dir_all(&self.data_dir)?;
         std::fs::create_dir_all(self.tdlib_database_path())?;
         std::fs::create_dir_all(self.tdlib_files_path())?;
+        std::fs::create_dir_all(self.downloads_path())?;
+        std::fs::create_dir_all(self.cache_media_path())?;
         if let Some(log_dir) = self.log_path().parent() {
             std::fs::create_dir_all(log_dir)?;
         }
+        Ok(())
+    }
+
+    pub fn downloads_path(&self) -> PathBuf {
+        self.downloads_dir
+            .clone()
+            .unwrap_or_else(|| self.data_dir.join("downloads"))
+    }
+
+    pub fn cache_media_path(&self) -> PathBuf {
+        self.data_dir.join("cache").join("media")
+    }
+
+    pub fn clean_media_cache(&self) -> Result<()> {
+        let cache_dir = self.cache_media_path();
+        if cache_dir.exists() {
+            let _ = std::fs::remove_dir_all(&cache_dir);
+        }
+        let _ = std::fs::create_dir_all(&cache_dir);
         Ok(())
     }
 

@@ -6,6 +6,7 @@ use tg_core::{AuthState, ChatId, CoreEvent, CoreHandle, Message, MessageContent,
 pub mod audio;
 use audio::AudioPlayer;
 use crate::ui::chat_list::{filter_chats, ChatFilterTab};
+use crate::ui::image::open_file_in_os;
 use crate::ui::modals::image_viewer::ImageViewerState;
 use crate::ui::modals::{ActiveModal, AuthModalState, ProxyModalState, SettingsModalState};
 
@@ -80,10 +81,16 @@ pub struct App {
     pub is_fetching_older_history: bool,
     pub reached_history_start: HashSet<ChatId>,
     pub pending_preview_file_id: Option<i32>,
+    pub pending_save_file_id: Option<i32>,
+    pub config: tg_core::Config,
 }
 
 impl App {
     pub fn new(handle: CoreHandle) -> Self {
+        Self::with_config(handle, tg_core::Config::default())
+    }
+
+    pub fn with_config(handle: CoreHandle, config: tg_core::Config) -> Self {
         let mut chat_list_state = ListState::default();
         chat_list_state.select(Some(0));
 
@@ -116,6 +123,8 @@ impl App {
             is_fetching_older_history: false,
             reached_history_start: HashSet::new(),
             pending_preview_file_id: None,
+            pending_save_file_id: None,
+            config,
         }
     }
 
@@ -365,12 +374,57 @@ impl App {
                     let _ = self.handle.download_file(file_id, 32).await;
                     self.status_message = "Загрузка фото для просмотра...".to_string();
                 }
+                MessageContent::Video { file_id, .. } | MessageContent::VideoNote { file_id, .. } => {
+                    self.open_selected_video(file_id).await;
+                }
                 MessageContent::Voice { .. } | MessageContent::Audio { .. } => {
                     self.play_selected_audio();
+                }
+                MessageContent::Document { file_id, file_name, .. } => {
+                    let state = self.handle.read_state();
+                    if let Some(file) = state.get_file(file_id) {
+                        if let Some(ref path) = file.local_path {
+                            if path.exists() {
+                                if let Err(e) = open_file_in_os(path) {
+                                    self.status_message = format!("Ошибка открытия документа: {}", e);
+                                    self.is_status_error = true;
+                                } else {
+                                    self.status_message = format!("▶ Открытие документа '{}'...", file_name);
+                                    self.is_status_error = false;
+                                }
+                                return;
+                            }
+                        }
+                    }
+                    self.pending_preview_file_id = Some(file_id);
+                    let _ = self.handle.download_file(file_id, 32).await;
+                    self.status_message = format!("Загрузка документа '{}'...", file_name);
                 }
                 _ => {}
             }
         }
+    }
+
+    /// Open or launch video playback in OS default media player.
+    pub async fn open_selected_video(&mut self, file_id: i32) {
+        let state = self.handle.read_state();
+        if let Some(file) = state.get_file(file_id) {
+            if let Some(ref path) = file.local_path {
+                if path.exists() {
+                    if let Err(e) = open_file_in_os(path) {
+                        self.status_message = format!("Ошибка открытия видео: {}", e);
+                        self.is_status_error = true;
+                    } else {
+                        self.status_message = "▶ Запуск видео в системном плеере...".to_string();
+                        self.is_status_error = false;
+                    }
+                    return;
+                }
+            }
+        }
+        self.pending_preview_file_id = Some(file_id);
+        let _ = self.handle.download_file(file_id, 32).await;
+        self.status_message = "Загрузка видео... Файл откроется в системном плеере после загрузки.".to_string();
     }
 
     /// Open full-screen Image Viewer for the currently selected photo message.
@@ -394,7 +448,19 @@ impl App {
                             }
                         }
                     }
-                    self.status_message = "Photo is still downloading...".to_string();
+                    self.status_message = "Фото загружается...".to_string();
+                }
+                MessageContent::Video { file_id, .. } | MessageContent::VideoNote { file_id, .. } => {
+                    let state = self.handle.read_state();
+                    if let Some(file) = state.get_file(file_id) {
+                        if let Some(ref path) = file.local_path {
+                            if path.exists() {
+                                let _ = open_file_in_os(path);
+                                self.status_message = "▶ Запуск видео в системном плеере...".to_string();
+                                return;
+                            }
+                        }
+                    }
                 }
                 MessageContent::Voice { .. } | MessageContent::Audio { .. } => {
                     self.play_selected_audio();
@@ -863,16 +929,52 @@ impl App {
                         .and_then(|p| p.file_name())
                         .map(|n| n.to_string_lossy().to_string())
                         .unwrap_or_else(|| format!("file_{}", file.id));
-                    self.status_message = format!("Downloaded: {}", path_name);
+                    self.status_message = format!("Загружено (Downloaded): {}", path_name);
                     self.is_status_error = false;
 
                     if self.pending_preview_file_id == Some(file.id) {
                         self.pending_preview_file_id = None;
-                        self.open_selected_media();
+                        if let Some(msg) = self.get_selected_message() {
+                            if msg.content.file_id() == Some(file.id) {
+                                match msg.content {
+                                    MessageContent::Photo { .. } => {
+                                        self.open_selected_media();
+                                    }
+                                    MessageContent::Video { .. } | MessageContent::VideoNote { .. } => {
+                                        if let Some(ref path) = file.local_path {
+                                            let _ = open_file_in_os(path);
+                                            self.status_message = "▶ Запуск видео в системном плеере...".to_string();
+                                        }
+                                    }
+                                    MessageContent::Document { .. } => {
+                                        if let Some(ref path) = file.local_path {
+                                            let _ = open_file_in_os(path);
+                                        }
+                                    }
+                                    _ => {}
+                                }
+                            }
+                        }
+                    }
+
+                    if self.pending_save_file_id == Some(file.id) {
+                        self.pending_save_file_id = None;
+                        if let Some(ref path) = file.local_path {
+                            let downloads_dir = self.config.downloads_path();
+                            let _ = std::fs::create_dir_all(&downloads_dir);
+                            let file_name = path.file_name()
+                                .map(|n| n.to_string_lossy().to_string())
+                                .unwrap_or_else(|| format!("file_{}.bin", file.id));
+                            let dest = downloads_dir.join(&file_name);
+                            if let Ok(_) = std::fs::copy(path, &dest) {
+                                self.status_message = format!("✔ Файл сохранён: {}", dest.display());
+                                self.is_status_error = false;
+                            }
+                        }
                     }
                 } else if file.is_downloading() {
                     self.status_message = format!(
-                        "Downloading file #{}: {:.0}%",
+                        "Загрузка файла #{}: {:.0}%",
                         file.id,
                         file.progress_percent()
                     );
@@ -881,6 +983,59 @@ impl App {
             }
             _ => {}
         }
+    }
+
+    /// Permanently save media from selected message into persistent downloads directory (Ctrl+S / D).
+    pub async fn save_selected_media_permanently(&mut self) {
+        if let Some(msg) = self.get_selected_message() {
+            if let Some(file_id) = msg.content.file_id() {
+                let state = self.handle.read_state();
+                if let Some(file) = state.get_file(file_id) {
+                    if let Some(ref path) = file.local_path {
+                        if path.exists() {
+                            let downloads_dir = self.config.downloads_path();
+                            let _ = std::fs::create_dir_all(&downloads_dir);
+                            let file_name = match &msg.content {
+                                MessageContent::Document { file_name, .. } => file_name.clone(),
+                                MessageContent::Video { file_name, .. } => file_name.clone(),
+                                _ => path.file_name()
+                                    .map(|n| n.to_string_lossy().to_string())
+                                    .unwrap_or_else(|| format!("file_{}.bin", file_id)),
+                            };
+                            let dest = downloads_dir.join(&file_name);
+                            match std::fs::copy(path, &dest) {
+                                Ok(_) => {
+                                    self.status_message = format!("✔ Файл сохранён: {}", dest.display());
+                                    self.is_status_error = false;
+                                }
+                                Err(e) => {
+                                    self.status_message = format!("Ошибка сохранения: {}", e);
+                                    self.is_status_error = true;
+                                }
+                            }
+                            return;
+                        }
+                    }
+                }
+
+                // File not yet downloaded, request download with priority and mark for saving
+                self.pending_save_file_id = Some(file_id);
+                if let Err(e) = self.handle.download_file(file_id, 32).await {
+                    self.status_message = format!("Ошибка скачивания #{}: {}", file_id, e);
+                    self.is_status_error = true;
+                } else {
+                    self.status_message = "Скачивание для постоянного сохранения на диск...".to_string();
+                    self.is_status_error = false;
+                }
+            } else {
+                self.status_message = "В выбранном сообщении нет медиафайлов.".to_string();
+            }
+        }
+    }
+
+    /// Clean temporary media cache folder on exit
+    pub fn cleanup_cache(&self) {
+        let _ = self.config.clean_media_cache();
     }
 
     /// Trigger download of the media file in the currently focused chat/message.

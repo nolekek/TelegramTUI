@@ -35,10 +35,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.mock {
         config.use_mock = true;
     }
+    if let Some(ref d_dir) = args.downloads_dir {
+        config.downloads_dir = Some(d_dir.clone());
+    }
+
+    // Clean orphaned temporary media cache on startup
+    let _ = config.clean_media_cache();
 
     let (handle, event_rx) = Engine::start(config.clone()).await?;
 
-    let mut app = App::new(handle);
+    let mut app = App::with_config(handle, config.clone());
     app.proxy_modal_state = ProxyModalState::from_config(config.proxy.as_ref());
     app.sync_message_selection_to_newest();
 
@@ -79,7 +85,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // 4. Clean restoration of terminal screen and cursor
+    // 4. Clean restoration of terminal screen and cursor (and purge session media cache)
+    app.cleanup_cache();
     disable_raw_mode()?;
     execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
     terminal.show_cursor()?;
@@ -94,14 +101,11 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
     if state.auth_state != AuthState::Ready {
         match &state.auth_state {
             AuthState::WaitPhoneNumber => match key.code {
-                KeyCode::Esc => {
-                    // Esc switches to QR login instead of quitting the program!
+                KeyCode::Esc | KeyCode::Tab => {
+                    // Esc/Tab switches to QR login instead of quitting the program!
                     let _ = app.handle.request_qr_code().await;
                     app.status_message = "Переключение на вход по QR-коду...".to_string();
-                }
-                KeyCode::Tab => {
-                    let _ = app.handle.request_qr_code().await;
-                    app.status_message = "Переключение на вход по QR-коду...".to_string();
+                    app.is_status_error = false;
                 }
                 KeyCode::F(3) => {
                     app.active_modal = ActiveModal::Proxy;
@@ -111,6 +115,9 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
                 }
                 KeyCode::Backspace => {
                     app.auth_modal_state.input_buffer.pop();
+                    if app.auth_modal_state.input_buffer == "+" {
+                        app.auth_modal_state.input_buffer.clear();
+                    }
                 }
                 KeyCode::Char('q') | KeyCode::Char('Q') | KeyCode::Char('й') | KeyCode::Char('Й')
                     if app.auth_modal_state.input_buffer.is_empty() =>
@@ -118,7 +125,16 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
                     app.should_quit = true;
                 }
                 KeyCode::Char(c) => {
-                    app.auth_modal_state.input_buffer.push(c);
+                    if c.is_ascii_digit() {
+                        if app.auth_modal_state.input_buffer.is_empty() {
+                            app.auth_modal_state.input_buffer.push('+');
+                        }
+                        app.auth_modal_state.input_buffer.push(c);
+                        app.is_status_error = false;
+                    } else if c == '+' && app.auth_modal_state.input_buffer.is_empty() {
+                        app.auth_modal_state.input_buffer.push('+');
+                        app.is_status_error = false;
+                    }
                 }
                 _ => {}
             },
@@ -127,12 +143,14 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
                     // Esc returns to Phone Number screen instead of quitting!
                     let _ = app.handle.send_phone_number("").await;
                     app.status_message = "Возврат на экран ввода номера телефона.".to_string();
+                    app.is_status_error = false;
                 }
                 KeyCode::Char('p') | KeyCode::Char('P') | KeyCode::Char('з') | KeyCode::Char('З')
                     if app.auth_modal_state.input_buffer.is_empty() =>
                 {
                     let _ = app.handle.send_phone_number("").await;
                     app.status_message = "Возврат на экран ввода номера телефона.".to_string();
+                    app.is_status_error = false;
                 }
                 KeyCode::Enter => {
                     app.handle_submit().await;
@@ -140,8 +158,9 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
                 KeyCode::Backspace => {
                     app.auth_modal_state.input_buffer.pop();
                 }
-                KeyCode::Char(c) => {
+                KeyCode::Char(c) if c.is_ascii_digit() => {
                     app.auth_modal_state.input_buffer.push(c);
+                    app.is_status_error = false;
                 }
                 _ => {}
             },
@@ -198,6 +217,12 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
 
     // 1.5 Image Viewer Modal (Full Screen Photo View)
     if app.active_modal == ActiveModal::ImageViewer {
+        if key.modifiers.contains(KeyModifiers::CONTROL)
+            && (key.code == KeyCode::Char('s') || key.code == KeyCode::Char('S') || key.code == KeyCode::Char('ы') || key.code == KeyCode::Char('Ы'))
+        {
+            app.save_selected_media_permanently().await;
+            return;
+        }
         match key.code {
             KeyCode::Esc | KeyCode::Char('q') | KeyCode::Char('Q') | KeyCode::Char('й') | KeyCode::Char('Й') => {
                 app.active_modal = ActiveModal::None;
@@ -212,6 +237,27 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
                         app.status_message = "Фото открыто в стандартном приложении ОС.".to_string();
                     }
                 }
+            }
+            KeyCode::Char('s') | KeyCode::Char('S') | KeyCode::Char('ы') | KeyCode::Char('Ы') => {
+                app.save_selected_media_permanently().await;
+            }
+            _ => {}
+        }
+        return;
+    }
+
+    // 1.6 Help Modal (F1 / ?)
+    if app.active_modal == ActiveModal::Help {
+        match key.code {
+            KeyCode::Esc
+            | KeyCode::Enter
+            | KeyCode::F(1)
+            | KeyCode::Char('q')
+            | KeyCode::Char('Q')
+            | KeyCode::Char('й')
+            | KeyCode::Char('Й')
+            | KeyCode::Char('?') => {
+                app.active_modal = ActiveModal::None;
             }
             _ => {}
         }
@@ -399,6 +445,14 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
     }
 
     match key.code {
+        KeyCode::F(1) => {
+            app.active_modal = if app.active_modal == ActiveModal::Help {
+                ActiveModal::None
+            } else {
+                ActiveModal::Help
+            };
+            return;
+        }
         KeyCode::F(2) => {
             app.active_modal = ActiveModal::Settings;
             return;
@@ -448,11 +502,19 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
                 app.chat_list_state.select(Some(0));
                 return;
             }
-            KeyCode::Char('[') | KeyCode::Char('х') | KeyCode::Char('Х') if key.modifiers.contains(KeyModifiers::ALT) || app.search_query.is_empty() => {
+            KeyCode::Char('[') if key.modifiers.contains(KeyModifiers::ALT) || app.search_query.is_empty() => {
                 app.prev_tab();
                 return;
             }
-            KeyCode::Char(']') | KeyCode::Char('ъ') | KeyCode::Char('Ъ') if key.modifiers.contains(KeyModifiers::ALT) || app.search_query.is_empty() => {
+            KeyCode::Char(']') if key.modifiers.contains(KeyModifiers::ALT) || app.search_query.is_empty() => {
+                app.next_tab();
+                return;
+            }
+            KeyCode::Char('х') | KeyCode::Char('Х') if key.modifiers.contains(KeyModifiers::ALT) => {
+                app.prev_tab();
+                return;
+            }
+            KeyCode::Char('ъ') | KeyCode::Char('Ъ') if key.modifiers.contains(KeyModifiers::ALT) => {
                 app.next_tab();
                 return;
             }
@@ -501,6 +563,12 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
 
     // 6. Full-Screen Chat View: Classic Mode Handler (Direct typing & arrow navigation)
     if app.navigation_mode == NavigationMode::Classic {
+        if key.modifiers.contains(KeyModifiers::CONTROL)
+            && (key.code == KeyCode::Char('s') || key.code == KeyCode::Char('S') || key.code == KeyCode::Char('ы') || key.code == KeyCode::Char('Ы'))
+        {
+            app.save_selected_media_permanently().await;
+            return;
+        }
         match key.code {
             KeyCode::Esc => {
                 app.exit_to_chat_search();
@@ -508,6 +576,10 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
             KeyCode::Enter => {
                 if !app.input_text.trim().is_empty() {
                     app.handle_submit().await;
+                } else if let Some(msg) = app.get_selected_message() {
+                    if msg.content.file_id().is_some() {
+                        app.trigger_selected_media_action().await;
+                    }
                 }
             }
             KeyCode::Up => {
@@ -637,6 +709,14 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
     }
 
     // 8. Full-Screen Chat View: Normal Mode
+    // Global Ctrl+S to permanently save selected message media to downloads directory
+    if key.modifiers.contains(KeyModifiers::CONTROL)
+        && (key.code == KeyCode::Char('s') || key.code == KeyCode::Char('S') || key.code == KeyCode::Char('ы') || key.code == KeyCode::Char('Ы'))
+    {
+        app.save_selected_media_permanently().await;
+        return;
+    }
+
     // Normalize character commands (Russian layout -> Latin)
     let norm_code = match key.code {
         KeyCode::Char(c) => KeyCode::Char(normalize_command_char(c)),
@@ -659,9 +739,27 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
     }
 
     match norm_code {
-        // Return to Chat Search / Picker screen (/ or s or Esc)
-        KeyCode::Esc | KeyCode::Char('/') | KeyCode::Char('s') => {
+        // Toggle Help modal
+        KeyCode::F(1) | KeyCode::Char('?') => {
+            app.active_modal = if app.active_modal == ActiveModal::Help {
+                ActiveModal::None
+            } else {
+                ActiveModal::Help
+            };
+        }
+
+        // Return to Chat Search / Picker screen (/ or Esc)
+        KeyCode::Esc | KeyCode::Char('/') => {
             app.exit_to_chat_search();
+        }
+
+        // Stop audio if playing, otherwise return to chat search
+        KeyCode::Char('s') => {
+            if app.audio_player.is_playing() {
+                app.stop_audio();
+            } else {
+                app.exit_to_chat_search();
+            }
         }
 
         // Enter Command Mode (:q, :b, :find, :w, etc.)
@@ -670,8 +768,21 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
             app.cmd_buffer.clear();
         }
 
+        // Open/play media if message has media, otherwise enter Insert mode
+        KeyCode::Enter | KeyCode::Char('o') => {
+            if let Some(msg) = app.get_selected_message() {
+                if msg.content.file_id().is_some() {
+                    app.trigger_selected_media_action().await;
+                    return;
+                }
+            }
+            app.vim_mode = VimMode::Insert;
+            app.active_panel = ActivePanel::Input;
+            app.status_message = "-- INSERT -- (Enter отправить, Esc выйти)".to_string();
+        }
+
         // Enter Insert Mode to compose message
-        KeyCode::Char('i') | KeyCode::Char('a') | KeyCode::Enter => {
+        KeyCode::Char('i') | KeyCode::Char('a') => {
             app.vim_mode = VimMode::Insert;
             app.active_panel = ActivePanel::Input;
             app.status_message = "-- INSERT -- (Enter отправить, Esc выйти)".to_string();
@@ -703,10 +814,10 @@ async fn handle_key_event(app: &mut App, key: KeyEvent) {
         // Command buffer prefixes
         KeyCode::Char('d') => {
             app.cmd_buffer = "d".to_string();
-            app.status_message = "Нажмите 'd' ещё раз для удаления сообщения, или 'D' для скачивания файла".to_string();
+            app.status_message = "Нажмите 'd' ещё раз для удаления сообщения, или 'D' / Ctrl+S для сохранения на диск".to_string();
         }
         KeyCode::Char('D') => {
-            app.download_selected_message_media().await;
+            app.save_selected_media_permanently().await;
         }
         KeyCode::Char('g') => {
             app.cmd_buffer = "g".to_string();

@@ -199,9 +199,9 @@ pub fn render_messages(
                     String::new()
                 };
                 let status_hint = match file {
-                    Some(f) if f.is_completed() => " [Enter/v: View]",
+                    Some(f) if f.is_completed() => " [Enter/o: View  Ctrl+S: Save]",
                     Some(f) if f.is_downloading() => " [Downloading...]",
-                    _ => " [Enter/v: Download & View]",
+                    _ => " [Enter/o: Download & View  Ctrl+S: Save]",
                 };
                 let badge = format!("📷 [Photo{}{}{}]", dim_str, size_str, status_hint);
                 let body_str = if caption.is_empty() {
@@ -212,6 +212,89 @@ pub fn render_messages(
 
                 let mut spans = first_line_spans;
                 spans.push(Span::styled(body_str, Style::default().fg(Color::LightBlue)));
+                rendered_lines.push(Line::from(spans));
+                if let Some(status_spans) = file_status_spans(file) {
+                    let mut s = vec![cont_indent.clone()];
+                    s.extend(status_spans);
+                    rendered_lines.push(Line::from(s));
+                }
+            }
+            MessageContent::Video {
+                caption,
+                file_name,
+                duration,
+                width,
+                height,
+                file_id,
+                file_size,
+                ..
+            } => {
+                let file = state.get_file(*file_id);
+                let size_bytes = if *file_size > 0 {
+                    *file_size as i64
+                } else {
+                    file.map(|f| f.total_size()).unwrap_or(0)
+                };
+                let dim_str = if *width > 0 && *height > 0 {
+                    format!(" {}x{}", width, height)
+                } else {
+                    String::new()
+                };
+                let status_hint = match file {
+                    Some(f) if f.is_completed() => " [Enter/o: Play  Ctrl+S: Save]",
+                    Some(f) if f.is_downloading() => " [Downloading...]",
+                    _ => " [Enter/o: Download & Play  Ctrl+S: Save]",
+                };
+                let badge = format!(
+                    "🎬 [Video: {}{} • {} • {}{}]",
+                    file_name,
+                    dim_str,
+                    format_duration(*duration),
+                    format_bytes(size_bytes),
+                    status_hint
+                );
+                let body_str = if caption.is_empty() {
+                    badge
+                } else {
+                    format!("{} {}", badge, caption)
+                };
+
+                let mut spans = first_line_spans;
+                spans.push(Span::styled(body_str, Style::default().fg(Color::LightGreen)));
+                rendered_lines.push(Line::from(spans));
+                if let Some(status_spans) = file_status_spans(file) {
+                    let mut s = vec![cont_indent.clone()];
+                    s.extend(status_spans);
+                    rendered_lines.push(Line::from(s));
+                }
+            }
+            MessageContent::VideoNote {
+                duration,
+                length,
+                file_id,
+                file_size,
+            } => {
+                let file = state.get_file(*file_id);
+                let size_bytes = if *file_size > 0 {
+                    *file_size as i64
+                } else {
+                    file.map(|f| f.total_size()).unwrap_or(0)
+                };
+                let status_hint = match file {
+                    Some(f) if f.is_completed() => " [Enter/o: Play  Ctrl+S: Save]",
+                    Some(f) if f.is_downloading() => " [Downloading...]",
+                    _ => " [Enter/o: Download & Play  Ctrl+S: Save]",
+                };
+                let badge = format!(
+                    "🎥 [Video Note (Round): {} • {} • {}px{}]",
+                    format_duration(*duration),
+                    format_bytes(size_bytes),
+                    length,
+                    status_hint
+                );
+
+                let mut spans = first_line_spans;
+                spans.push(Span::styled(badge, Style::default().fg(Color::LightGreen)));
                 rendered_lines.push(Line::from(spans));
                 if let Some(status_spans) = file_status_spans(file) {
                     let mut s = vec![cont_indent.clone()];
@@ -267,7 +350,7 @@ pub fn render_messages(
                     (None, None) => "Unknown Track".to_string(),
                 };
                 let badge = format!(
-                    "🎵 [Audio: {} • {} • {}] [p: Play]",
+                    "🎵 [Audio: {} • {} • {}] [Enter/o: Play  Ctrl+S: Save]",
                     track_str,
                     format_duration(*duration),
                     format_bytes(size_bytes)
@@ -291,7 +374,7 @@ pub fn render_messages(
                 let size_str = file
                     .map(|f| format!(" • {}", format_bytes(f.total_size())))
                     .unwrap_or_default();
-                let badge = format!("🎤 [Voice Note: {}{} • [p: Play]]", format_duration(*duration), size_str);
+                let badge = format!("🎤 [Voice Note: {}{} • [Enter/o: Play  Ctrl+S: Save]]", format_duration(*duration), size_str);
                 let body_str = if caption.is_empty() {
                     badge
                 } else {
@@ -404,11 +487,11 @@ fn file_status_spans(file: Option<&FileInfo>) -> Option<Vec<Span<'static>>> {
                 .local_path
                 .as_ref()
                 .map(|p| p.to_string_lossy().to_string())
-                .unwrap_or_else(|| ".data/tdlib_files/...".to_string());
+                .unwrap_or_else(|| "кэш".to_string());
             Some(vec![
                 Span::raw("    "),
                 Span::styled(
-                    format!("[Downloaded to {}]", path_str),
+                    format!("[Готово к просмотру ({} • Ctrl+S чтобы сохранить)]", path_str),
                     Style::default().fg(Color::Green),
                 ),
             ])
@@ -418,7 +501,7 @@ fn file_status_spans(file: Option<&FileInfo>) -> Option<Vec<Span<'static>>> {
                 Span::raw("    "),
                 Span::styled(
                     format!(
-                        "[Uploading: {} / {}]",
+                        "[Отправка: {} / {}]",
                         format_bytes(*uploaded_size),
                         format_bytes(file.total_size())
                     ),
@@ -430,7 +513,7 @@ fn file_status_spans(file: Option<&FileInfo>) -> Option<Vec<Span<'static>>> {
             Some(vec![
                 Span::raw("    "),
                 Span::styled(
-                    format!("[Download failed: {}]", err),
+                    format!("[Ошибка загрузки: {}]", err),
                     Style::default().fg(Color::Red),
                 ),
             ])
@@ -438,7 +521,7 @@ fn file_status_spans(file: Option<&FileInfo>) -> Option<Vec<Span<'static>>> {
         FileTransferStatus::Idle => {
             Some(vec![
                 Span::raw("    "),
-                Span::styled("[Press 'd' to download]", Style::default().fg(Color::DarkGray)),
+                Span::styled("[Enter/o: Просмотр  Ctrl+S: Сохранить на диск]", Style::default().fg(Color::DarkGray)),
             ])
         }
     }
