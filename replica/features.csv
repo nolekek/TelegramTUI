@@ -1,0 +1,61 @@
+feature,area,priority,original,clone,notes
+Log in via phone number with SMS/Telegram code,auth,must,yes,yes,Implemented in S01 Auth Gate
+Log in via QR code scan,auth,should,yes,partial,Planned QR rendering
+2FA Cloud Password protection,auth,must,yes,yes,Implemented in S01 step 3
+Multi-account switching,auth,could,yes,no,Support up to 3+ accounts simultaneously
+Active sessions view and remote termination,auth,should,yes,partial,Security management view in S12
+Chat list with real-time updates and sorting,dialogs,must,yes,yes,Implemented in S02 Dialogs widget
+Unread message count and mention (@) badges,dialogs,must,yes,yes,Implemented with color roles and mute state
+Pinned chats support,dialogs,must,yes,yes,Pinned icon 📌 and top ordering in S02
+Mute and unmute notifications per chat,dialogs,must,yes,yes,Mute icon 🔇 and grey badge variant
+Folder / tab filtering for chat list,dialogs,should,yes,yes,Implemented tabs (All; Personal; Groups; Channels)
+Archive chat folder,dialogs,should,yes,partial,Hide low-priority chats from main list
+Send plain text messages,messaging,must,yes,yes,Core messaging loop implemented in S04
+Markdown formatting (bold; italic; mono; strikethrough; spoiler; quote),messaging,must,yes,yes,Typed syntax (**bold**; `code`) parsed in S03/S04
+Optimistic UI message status (pending; sent; read),messaging,must,yes,yes,Immediate local render with clock icon then 1/2 checkmarks
+Reply to message with quote preview and jump-to,messaging,must,yes,yes,Clicking quote jumps to message in history; reply banner in S04
+Edit sent message,messaging,must,yes,yes,In-place edit with (edited) label; Up arrow / 'e' trigger
+Delete message (for me vs for everyone),messaging,must,yes,yes,'d' key and context menu delete action
+Message drafts autosave,messaging,should,yes,yes,Draft saved per chat and restored on chat switch
+Forward message with privacy toggle (hide author / hide caption),messaging,must,yes,yes,S11 Forward modal with [x] Hide sender name toggle
+Pin and unpin message in chat,messaging,should,yes,partial,Pinned indicator supported
+Send images and photos with compression option,media,must,yes,yes,Attach modal with compress photo vs uncompressed file toggle
+Send files and documents of any format (up to 2GB),media,must,yes,yes,Document transfer with upload progress bar
+Media viewer / lightbox with zoom and navigation,media,must,yes,yes,S08 Lightbox modal with zoom and external viewer launcher
+Voice message playback with progress waveform,media,should,yes,yes,ASCII waveform rendering with 'p' play action
+Record and send voice messages,media,should,yes,partial,Microphone capture and Opus encoding
+Video message (round video) playback,media,could,yes,no,Circular video playback
+Local media caching and disk limit controls,media,should,yes,partial,Prune cache older than N days / size limit
+Add and remove emoji reactions on messages,reactions,must,yes,yes,Interactive picker (+) with emoji buttons and reaction pills
+Sticker picker with packs and recent stickers,stickers,should,yes,no,Custom sticker sets
+Animated stickers and emoji playback (TGS / Lottie),stickers,could,yes,no,Requires Lottie vector animation engine
+GIF search and inline playback,stickers,should,yes,no,Tenor integration for search & autoplay loop
+Link previews with OpenGraph metadata,rich_content,should,yes,partial,Rich title; description; thumbnail preview
+Code blocks with syntax highlighting and copy button,rich_content,should,yes,yes,Preformatted code snippets rendered with style
+1-on-1 private direct messages,chat_types,must,yes,yes,User-to-user dialogue supported
+Group chats and Supergroups,chat_types,must,yes,yes,Multi-user dialogue with member names
+Broadcast channels (read-only for subscribers),chat_types,must,yes,yes,Channel feed mode with muted indicator
+Forum topics in supergroups,chat_types,should,yes,partial,Sub-threads within large communities
+In-chat text search,search,must,yes,yes,Search modal overlay S10 with query buffer
+Global search across all chats; messages and media,search,should,yes,partial,Find anything across dialogs
+Jump to date in message history,search,should,yes,no,Date picker calendar navigation
+Chat profile and info pane (members; bio; username),info_panel,must,yes,yes,Right collapsible panel S05
+Shared media drawer (Photos; Files; Audio; Links),info_panel,must,yes,yes,Paginated gallery of chat attachments S06
+Group member list and admin management,info_panel,should,yes,partial,Ban; kick; promote; edit permissions
+Desktop push notifications and sound effects,settings,must,yes,yes,In-app status banner and terminal sound bell on new messages
+Dark and light theme support,settings,must,yes,yes,WCAG 2.2 AA TrueColor & ANSI-16 themes
+Proxy support (MTProto and SOCKS5),settings,should,yes,no,Bypass network restrictions
+1-on-1 audio and video calls,calls,could,yes,no,WebRTC P2P/relay call engine
+Group voice chats / live video streams,calls,could,yes,no,Scalable multi-speaker audio room
+Telegram Stories desktop viewer and publisher,stories,could,yes,skip,Desktop story creation is non-essential mobile feature
+Telegram Mini Apps (TMA / WebGL bots),bots,could,yes,skip,Requires full Chromium Embedded Framework
+TON Crypto Wallet / Fragment username trading,crypto,could,yes,skip,Third-party financial and blockchain integration
+Telegram Ads platform injector,ads,could,yes,skip,Internal advertising engine
+Telegram proprietary server backend and cluster,backend,must,yes,skip,Proprietary server architecture; use MTProto / TDLib to official servers or custom mock
+Ultra-lightweight terminal UI engine (<25MB RAM footprint),performance,must,no,yes,Replaces 1.5GB Qt/Chromium with Rust Ratatui TUI (FIX-01)
+100% Keyboard and Vim modal navigation,ux,must,no,yes,Complete keybinding loop (j/k; tab; search; cheatsheet) with zero mouse requirement (FIX-02)
+Zero-clutter guarantee (no TON crypto; no mini-apps; no stories),clutter_free,must,no,yes,Purged of all web3 tokens; stories; and promotional banner surfaces (FIX-03)
+Local-first SQLite database with WAL mode and local indexing,storage,must,no,yes,Fast indexed local storage schema.sql with zero server reliance (FIX-04)
+One-key plaintext and Markdown chat exporter,data_portability,should,no,yes,Export full conversation transcripts directly to local markdown files (FIX-05)
+Unsolicited DM and invite quarantine spam firewall,privacy,should,no,partial,Isolate cold outreach messages and auto-block promotional bots (FIX-06)
+Instant multi-profile session switching without relogin,auth,could,no,partial,Fast hotkey profile switching across TDLib database instances (FIX-07)

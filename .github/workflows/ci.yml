@@ -23,11 +23,8 @@ jobs:
       - name: Cache Cargo Dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: Fetch TDLib Binaries
-        run: cargo run -p fetch-tdlib
-
-      - name: Build Workspace
-        run: cargo build --workspace
+      - name: Build
+        run: cargo build --verbose
 
       - name: Run Tests
-        run: cargo test --workspace
+        run: cargo test --verbose

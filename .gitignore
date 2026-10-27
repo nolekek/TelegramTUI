@@ -1,19 +1,25 @@
+# Rust build artifacts
 /target/
 **/*.rs.bk
-Cargo.lock
 
-# Portable data directory
-.data/
-crates/*/.data/
-dist/
-*.zip
+# Local SQLite databases and caches
+*.db
+*.db-shm
+*.db-wal
+tgtui_cache.db
 
-# Local tooling & cargo config
-.cargo/
-zig-linker*.cmd
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+config.local.toml
 
-# IDE
-.idea/
-.vscode/
-*.swp
-*.iml
+# TDLib local databases and sessions
+tdlib_data/
+*.binlog
+td.binlog*
+
+# OS specific
+Thumbs.db
+.DS_Store
+*.log

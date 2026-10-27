@@ -1,0 +1,65 @@
+/**
+ * Design Tokens for TgTui (Telegram Desktop Rebuild)
+ * Generated from tokens.json - Checked for WCAG 2.2 AA Contrast Compliance
+ */
+
+:root {
+  /* Colors */
+  --color-bg: #0e1621;
+  --color-surface: #182533;
+  --color-surface-hover: #202f3d;
+  --color-border: #283a4f;
+  --color-border-input: #5ba2f4;
+  --color-text: #f8fafc;
+  --color-text-muted: #b8cbdb;
+  --color-accent: #5ba2f4;
+  --color-on-accent: #0e1621;
+  --color-danger: #f87171;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+
+  /* Typography */
+  --font-sans: "JetBrains Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace;
+  --font-mono: "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Type Scale */
+  --type-xs-size: 11px;
+  --type-xs-line: 14px;
+  --type-sm-size: 13px;
+  --type-sm-line: 18px;
+  --type-base-size: 15px;
+  --type-base-line: 22px;
+  --type-lg-size: 18px;
+  --type-lg-line: 26px;
+  --type-xl-size: 24px;
+  --type-xl-line: 32px;
+  --type-display-size: 32px;
+  --type-display-line: 38px;
+
+  /* Spacing */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-none: 0px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-pop: 0 10px 25px rgba(0, 0, 0, 0.6);
+
+  /* Transitions */
+  --motion-fast: 100ms;
+  --motion-base: 150ms;
+  --motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

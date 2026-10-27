@@ -1,33 +1,17 @@
-[workspace]
-resolver = "2"
-members = [
-    "crates/tg-core",
-    "crates/tg-tui",
-    "tools/fetch-tdlib",
-]
-
-[workspace.package]
-version = "0.1.1"
+[package]
+name = "tg-tui"
+version = "1.0.0"
 edition = "2021"
-authors = ["Telegram TUI Team"]
-license = "MIT OR Apache-2.0"
+authors = ["TgTui Contributors"]
+description = "High-performance Telegram Terminal Client (TUI) rebuild"
 
-[workspace.dependencies]
-tokio = { version = "1.38", features = ["full"] }
+[dependencies]
+ratatui = "0.28"
+crossterm = "0.28"
+tokio = { version = "1.40", features = ["full"] }
+unicode-width = "0.1"
+unicode-segmentation = "1.12"
 serde = { version = "1.0", features = ["derive"] }
-serde_json = { version = "1.0" }
-thiserror = "1.0"
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
-tracing-appender = "0.2"
-libloading = "0.8"
-ratatui = "0.29"
-crossterm = { version = "0.28", features = ["event-stream"] }
+serde_json = "1.0"
 toml = "0.8"
-reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream", "json"] }
-parking_lot = "0.12"
-chrono = { version = "0.4", features = ["serde"] }
-image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
-rodio = { version = "0.20", default-features = false, features = ["vorbis", "flac", "wav"] }
-dirs = "5.0"
-
+chrono = "0.4"

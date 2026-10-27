@@ -1,0 +1,32 @@
+ TgTui  | Telegram Desktop Terminal Client | Focus: Composer | [?] Help | [F1] Auth Demo                      
+╭ Folders (1-4) ──────────────────╮Pavel Durov • Online | [i] Info | [/] Search                               
+│[All]  Personal   Groups   Channe│                                                                           
+╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
+╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
+│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
+│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│                                 ││     [👋 : 4]                                                             │
+│  📌  🌐  Rust Community Group 12:3││                                                                         │
+│   Alice: Check out Rat...  14   ││  Pavel Durov 12:42                                                      │
+│                                 ││    🎤  Voice (0:18)  ▂▃▅▆▇▆▅▃▂  [p: play]                                │
+│  🔇  📢  Telegram Desktop News Yes││ ╭───── Message Actions (S07) ──────╮to updates:                         │
+│   Major update release...       ││ │ [r]  Reply to message            │                                    │
+│                                 ││ │ [e]  Edit message (own only)     │                                    │
+│  📌  🔇  👤  Saved Messages Mon    ││ │ [f]  Forward with privacy        │ the TgTui clean-room...            │
+│   Notes: investigate M...       ││ │ [d]  Delete message              │tting with **bold**, `code`, and    │
+│                                 ││W│ [p]  Play voice note             │                                    │
+│                                 ││ │                                  │                                    │
+│                                 ││ │ [Esc]  Close menu                │                                    │
+│                                 ││ │                                  │                                    │
+│                                 ││ ╰──────────────────────────────────╯ or testing the context menu.       │
+│                                 ││     [❤️ : 2]                                                             │
+│                                 ││                                                                         │
+│                                 ││  Pavel Durov 12:46                                                      │
+│                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
+│                                 ││View Lightbox]                                                           │
+│                                 │╰─────────────────────────────────────────────────────────────────────────╯
+│                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
+│                                 ││Checking out the clean-room terminal client! **bold**█                   │
+│                                 ││                                                                         │
+╰─────────────────────────────────╯╰─────────────────────────────────────────────────────────────────────────╯
+[Tab] Pane | [j/k] Nav | [r] Reply | [+] React | [f] Fwd | [a] Attach | [e] Edit | [m] Menu | [q] Quit        

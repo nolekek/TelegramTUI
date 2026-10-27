@@ -1,0 +1,124 @@
+{
+  "_about": "Themes reviews.py sorts Telegram feedback into. Matched case-insensitively against the review text.",
+  "request_patterns": [
+    "\\bi wish\\b",
+    "\\bplease add\\b",
+    "\\bwould be (nice|great|good|helpful)\\b",
+    "\\bwould love\\b",
+    "\\bneeds? (a|an|the|to|more)\\b",
+    "\\bno way to\\b",
+    "\\bthere'?s no (way|option)\\b",
+    "\\b(can'?t|cannot|unable to) (even )?(add|change|edit|set|choose|export|import|customi[sz]e|connect|undo|delete|turn off|disable|hide)\\b",
+    "\\b(missing|lacks|lacking)\\b",
+    "\\bdoesn'?t (have|support|let|allow)\\b",
+    "\\bif only\\b",
+    "\\bfeature request\\b",
+    "\\bwhy (can'?t|isn'?t|doesn'?t)\\b",
+    "\\bwant (a|to|the)\\b",
+    "\\bhope they add\\b"
+  ],
+  "themes": [
+    {
+      "id": "performance",
+      "label": "High RAM, memory leak, heavy and slow",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(ram|memory|gigabytes?|gb of ram|memory leak|high cpu|battery drain|swapping)\\b",
+        "\\b(slow|lag|laggy|sluggish|heavy|bloat|bloated|resource hungry)\\b",
+        "\\btakes forever\\b",
+        "\\bfreez(e|es|ing)\\b"
+      ]
+    },
+    {
+      "id": "bloat_clutter",
+      "label": "Crypto, TON wallet, stories and UI clutter",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(ton|crypto|wallet|blockchain|nft|stars|fragment)\\b",
+        "\\b(stories|story|mini.?apps?|web.?view|games?)\\b",
+        "\\b(clutter|cluttered|bloatware|unnecessary|annoying feature)\\b",
+        "\\bdisable stories\\b",
+        "\\bhide stories\\b"
+      ]
+    },
+    {
+      "id": "privacy_encryption",
+      "label": "Privacy, lack of desktop E2EE secret chats",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(secret chats?|e2ee|end.?to.?end|encryption|encrypted)\\b",
+        "\\b(privacy|tracking|plaintext|cloud storage|server.?side)\\b",
+        "\\bclient.?side encryption\\b"
+      ]
+    },
+    {
+      "id": "spam_scams",
+      "label": "Spam channels, bots, scam messages and unwanted invites",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(spam|spammers?|scam|scammers?|phishing|fake account|fraud)\\b",
+        "\\b(unwanted|invites? to groups?|channel spam)\\b",
+        "\\bbot spam\\b"
+      ]
+    },
+    {
+      "id": "account_auth",
+      "label": "Login, phone SMS codes, bans and locked accounts",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(log ?in|sign ?in|sms|verification code|phone number|banned|blocked|account suspended|locked out|2fa)\\b",
+        "\\btoo many times signing in\\b"
+      ]
+    },
+    {
+      "id": "pricing",
+      "label": "Telegram Premium, price and paywalls",
+      "kind": "complaint",
+      "patterns": [
+        "\\b(premium|subscription|paywall|expensive|overpriced|stars|paid)\\b",
+        "\\bfree version\\b",
+        "\\bnot worth\\b"
+      ]
+    },
+    {
+      "id": "bugs",
+      "label": "Bugs, crashes and message delivery errors",
+      "kind": "complaint",
+      "patterns": [
+        "\\bcrash(es|ed|ing)?\\b",
+        "\\bbugs?\\b",
+        "\\bbuggy\\b",
+        "\\bglitch(es)?\\b",
+        "\\bbroken\\b",
+        "\\b(doesn'?t|does not|stopped) work\\b",
+        "\\bfailed to send\\b"
+      ]
+    },
+    {
+      "id": "terminal_keyboard",
+      "label": "Keyboard shortcuts, CLI, terminal and developer friendliness",
+      "kind": "request",
+      "patterns": [
+        "\\b(keyboard|hotkey|shortcuts?|keybinding|cli|terminal|tui|command line|vim)\\b",
+        "\\bdesktop-native\\b",
+        "\\bdeveloper\\b"
+      ]
+    },
+    {
+      "id": "customisation",
+      "label": "Customisation, UI control and theme options",
+      "kind": "request",
+      "patterns": [
+        "\\b(customi[sz]|dark mode|theme|font size|compact|layout|turn off|disable|hide)\\b"
+      ]
+    },
+    {
+      "id": "data_sync",
+      "label": "Chat export, backup and sync",
+      "kind": "request",
+      "patterns": [
+        "\\b(export|backup|download all|sync|offline|history)\\b"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+ TgTui  | Telegram Desktop Terminal Client | Focus: Composer | [?] Help | [F1] Auth Demo                      
+╭ Folders (1-4) ──────────────────╮Pavel Durov • Online | [i] Info | [/] Search                               
+│[All]  Personal   Groups   Channe│                                                                           
+╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
+╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
+│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
+│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│                                 ││     [👋 : 4]                                                             │
+│  📌  🌐  Rust Community╭─── Media Viewer Lightbox (S08) — architecture_diagram.png ───╮                      │
+│   Alice: Check out Ra│Resolution: 1920x1080 | Zoom: 100%                            │                      │
+│                      │                                                              │                      │
+│  🔇  📢  Telegram Deskt│┌──────────────────────────────────────────────┐              │                      │
+│   Major update releas││                  [ IMAGE ]                   │              │                      │
+│                      ││           High-Resolution Preview            │              │                      │
+│  📌  🔇  👤  Saved Messa││                                              │              │an-room...            │
+│   Notes: investigate │└──────────────────────────────────────────────┘              │old**, `code`, and    │
+│                      │                                                              │                      │
+│                      │ [o] Open in system default viewer / mpv                      │                      │
+│                      │ [s] Save to Downloads                                        │                      │
+│                      │                                                              │                      │
+│                      │[Esc] or [q] Close lightbox                                   │e context menu.       │
+│                      │                                                              │                      │
+│                      │                                                              │                      │
+│                      ╰──────────────────────────────────────────────────────────────╯                      │
+│                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
+│                                 ││View Lightbox]                                                           │
+│                                 │╰─────────────────────────────────────────────────────────────────────────╯
+│                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
+│                                 ││Checking out the clean-room terminal client! **bold**█                   │
+│                                 ││                                                                         │
+╰─────────────────────────────────╯╰─────────────────────────────────────────────────────────────────────────╯
+[Tab] Pane | [j/k] Nav | [r] Reply | [+] React | [f] Fwd | [a] Attach | [e] Edit | [m] Menu | [q] Quit        
