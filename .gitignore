@@ -1,5 +1,6 @@
 # Rust build artifacts
 /target/
+dist/
 **/*.rs.bk
 
 # Local SQLite databases and caches
