@@ -3,18 +3,17 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ───────────────────────╭─────────── Search Messages (S10) ────────────╮──────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45     │Query: Ratatui█                               │                              │
-│   Welcome to the TgTui...  2 │                                              │terminal client.              │
+│▶ 📌  👤  Pavel Durov 12:45     │Query: Ratatui█                               │terminal client.              │
+│   Welcome to the TgTui...  2 │                                              │                              │
 │                              │Filter: All | Media | Files | Links           │                              │
 │  📌  🌐  Rust Community Group 1│[Esc] Close | [Enter] Jump to message         │                              │
 │   Alice: Check out Rat...  14│                                              │                              │
-│                              │                                              │                              │
-│  🔇  📢  Telegram Desktop News ╰──────────────────────────────────────────────╯ates:                         │
-│   Major update release...       ││                                                                         │
-│                                 ││  You 12:43 ✓✓                                                           │
-│  📌  🔇  👤  Saved Messages Mon    ││    ┌─ Pavel Durov: Hello! Welcome to the TgTui clean-room...            │
-│   Notes: investigate M...       ││    Thanks! We implemented rich formatting with **bold**, `code`, and    │
-│                                 ││WCAG 2.2 AA tokens.                                                      │
+│                              │                                              │ates:                         │
+│  🔇  📢  Telegram Desktop News ╰──────────────────────────────────────────────╯                              │
+│   Major update release...       ││  You 12:43 ✓✓                                                           │
+│                                 ││    ┌─ Pavel Durov: Hello! Welcome to the TgTui clean-room...            │
+│  📌  🔇  👤  Saved Messages Mon    ││    Thanks! We implemented rich formatting with **bold**, `code`, and    │
+│   Notes: investigate M...       ││WCAG 2.2 AA tokens.                                                      │
 │                                 ││     [🔥 : 3]  [👍 : 5]                                                    │
 │                                 ││                                                                         │
 │                                 ││  Pavel Durov 12:45                                                      │
@@ -24,6 +23,7 @@
 │                                 ││  Pavel Durov 12:46                                                      │
 │                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

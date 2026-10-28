@@ -186,6 +186,23 @@ pub fn render_messages_panel(f: &mut Frame, app: &AppCoordinator, theme: &Theme,
         }
     }
 
-    let history = Paragraph::new(lines).block(history_block).wrap(Wrap { trim: false });
+    let total_lines = lines.len();
+    let viewport_height = chunks[1].height.saturating_sub(2) as usize; // inner area height
+
+    // Auto-scroll logic:
+    // If a specific message is selected, center the viewport around it.
+    // If no message is selected (default), anchor scroll to the newest messages at the bottom!
+    let scroll_y = if let Some(selected_idx) = app.selected_msg_idx {
+        let msg_count = msgs.len().max(1);
+        let target_line = (selected_idx * total_lines) / msg_count;
+        target_line.saturating_sub(viewport_height / 2) as u16
+    } else {
+        total_lines.saturating_sub(viewport_height) as u16
+    };
+
+    let history = Paragraph::new(lines)
+        .block(history_block)
+        .wrap(Wrap { trim: false })
+        .scroll((scroll_y, 0));
     f.render_widget(history, chunks[1]);
 }

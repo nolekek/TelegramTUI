@@ -3,27 +3,27 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
-│                                 ││     [👋 : 4]                                                             │
-│  📌  🌐  Rust Community Group 12:3││                                                                         │
-│   Alice: Check out Rat...  14   ││  Pavel Durov 12:42                                                      │
-│                                 ││    🎤  Voice (0:18)  ▂▃▅▆▇▆▅▃▂  [p: play]                                │
-│  🔇  📢  Telegram Desktop News Yes││    Here is a voice briefing on MTProto updates:                         │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
+│                                 ││                                                                         │
+│  📌  🌐  Rust Community Group 12:3││  Pavel Durov 12:42                                                      │
+│   Alice: Check out Rat...  14   ││    🎤  Voice (0:18)  ▂▃▅▆▇▆▅▃▂  [p: play]                                │
+│                                 ││    Here is a voice briefing on MTProto updates:                         │
+│  🔇  📢  Telegram Desktop News Yes││                                                                         │
 │   Major update release...       ││╭───────── Add Reaction (+) ─────────╮                                   │
-│                                 │││ [1] 👍    [2] ❤️    [3] 🔥            │                                   │
-│  📌  🔇  👤  Saved Messages Mon    │││ [4] 🎉    [5] 👏    [6] 🤔            │the TgTui clean-room...            │
-│   Notes: investigate M...       │││                                    │ting with **bold**, `code`, and    │
+│                                 │││ [1] 👍    [2] ❤️    [3] 🔥            │the TgTui clean-room...            │
+│  📌  🔇  👤  Saved Messages Mon    │││ [4] 🎉    [5] 👏    [6] 🤔            │ting with **bold**, `code`, and    │
+│   Notes: investigate M...       │││                                    │                                   │
 │                                 │││Press 1-6 to toggle | [Esc] Close   │                                   │
 │                                 │││                                    │                                   │
 │                                 ││╰────────────────────────────────────╯                                   │
-│                                 ││  Pavel Durov 12:45                                                      │
 │                                 ││    Amazing work! Try sending a reply or testing the context menu.       │
 │                                 ││     [❤️ : 2]                                                             │
 │                                 ││                                                                         │
 │                                 ││  Pavel Durov 12:46                                                      │
 │                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

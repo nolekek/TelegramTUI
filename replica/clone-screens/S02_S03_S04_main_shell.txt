@@ -3,18 +3,17 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
-│                                 ││     [👋 : 4]                                                             │
-│  📌  🌐  Rust Community Group 12:3││                                                                         │
-│   Alice: Check out Rat...  14   ││  Pavel Durov 12:42                                                      │
-│                                 ││    🎤  Voice (0:18)  ▂▃▅▆▇▆▅▃▂  [p: play]                                │
-│  🔇  📢  Telegram Desktop News Yes││    Here is a voice briefing on MTProto updates:                         │
-│   Major update release...       ││                                                                         │
-│                                 ││  You 12:43 ✓✓                                                           │
-│  📌  🔇  👤  Saved Messages Mon    ││    ┌─ Pavel Durov: Hello! Welcome to the TgTui clean-room...            │
-│   Notes: investigate M...       ││    Thanks! We implemented rich formatting with **bold**, `code`, and    │
-│                                 ││WCAG 2.2 AA tokens.                                                      │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
+│                                 ││                                                                         │
+│  📌  🌐  Rust Community Group 12:3││  Pavel Durov 12:42                                                      │
+│   Alice: Check out Rat...  14   ││    🎤  Voice (0:18)  ▂▃▅▆▇▆▅▃▂  [p: play]                                │
+│                                 ││    Here is a voice briefing on MTProto updates:                         │
+│  🔇  📢  Telegram Desktop News Yes││                                                                         │
+│   Major update release...       ││  You 12:43 ✓✓                                                           │
+│                                 ││    ┌─ Pavel Durov: Hello! Welcome to the TgTui clean-room...            │
+│  📌  🔇  👤  Saved Messages Mon    ││    Thanks! We implemented rich formatting with **bold**, `code`, and    │
+│   Notes: investigate M...       ││WCAG 2.2 AA tokens.                                                      │
 │                                 ││     [🔥 : 3]  [👍 : 5]                                                    │
 │                                 ││                                                                         │
 │                                 ││  Pavel Durov 12:45                                                      │
@@ -24,6 +23,7 @@
 │                                 ││  Pavel Durov 12:46                                                      │
 │                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

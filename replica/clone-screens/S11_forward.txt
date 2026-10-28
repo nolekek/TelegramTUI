@@ -3,27 +3,27 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
-│                                 ││     [👋 : 4]                                                             │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
+│                                 ││                                                                         │
 │  📌  🌐  Rust Community Group ╭──────────── Forward Message (S11) ─────────────╮                             │
 │   Alice: Check out Rat...  1│Select destination chat:                        │                             │
-│                             │                                                │                             │
-│  🔇  📢  Telegram Desktop News│  Pavel Durov                                   │tes:                         │
+│                             │                                                │tes:                         │
+│  🔇  📢  Telegram Desktop News│  Pavel Durov                                   │                             │
 │   Major update release...   │▶ Rust Community Group                          │                             │
-│                             │  Telegram Desktop News                         │                             │
-│  📌  🔇  👤  Saved Messages Mon│  Saved Messages                                │Tui clean-room...            │
-│   Notes: investigate M...   │                                                │ith **bold**, `code`, and    │
+│                             │  Telegram Desktop News                         │Tui clean-room...            │
+│  📌  🔇  👤  Saved Messages Mon│  Saved Messages                                │ith **bold**, `code`, and    │
+│   Notes: investigate M...   │                                                │                             │
 │                             │[X] Hide sender name (Press Space to toggle)    │                             │
 │                             │                                                │                             │
 │                             │[Enter] Send | [↑/↓] Select Chat | [Esc] Cancel │                             │
-│                             │                                                │                             │
 │                             │                                                │ting the context menu.       │
 │                             │                                                │                             │
+│                             │                                                │                             │
 │                             ╰────────────────────────────────────────────────╯                             │
-│                                 ││  Pavel Durov 12:46                                                      │
 │                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

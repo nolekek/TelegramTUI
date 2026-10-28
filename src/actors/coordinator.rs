@@ -59,8 +59,15 @@ pub struct AppCoordinator {
 
 impl AppCoordinator {
     pub fn new(tdlib_cmd_tx: mpsc::Sender<TdlibCommand>) -> Self {
+        let is_authenticated = std::path::Path::new("session.json").exists();
+        let initial_auth = if is_authenticated {
+            AuthStep::Authenticated
+        } else {
+            AuthStep::PhoneInput { buffer: String::new(), error: None }
+        };
+
         Self {
-            auth_state: AuthStep::Authenticated,
+            auth_state: initial_auth,
             folders: vec![],
             chats: vec![],
             messages: HashMap::new(),
@@ -108,6 +115,9 @@ impl AppCoordinator {
     pub async fn handle_tdlib_event(&mut self, event: TdlibEvent) {
         match event {
             TdlibEvent::AuthChanged(auth) => {
+                if let AuthStep::Authenticated = &auth {
+                    let _ = std::fs::write("session.json", "{\"authenticated\": true}");
+                }
                 self.auth_state = auth;
             }
             TdlibEvent::ChatsLoaded(folders, chats) => {
@@ -120,8 +130,6 @@ impl AppCoordinator {
             TdlibEvent::NewMessage(msg) => {
                 let chat_id = msg.chat_id;
                 self.messages.entry(chat_id).or_default().push(msg);
-                // System notification beep for incoming messages
-                print!("\x07");
             }
             TdlibEvent::MessageStatusUpdated { chat_id, message_id, status } => {
                 if let Some(list) = self.messages.get_mut(&chat_id) {
@@ -542,9 +550,11 @@ impl AppCoordinator {
             }
             UserAction::ToggleAuthDemo => {
                 if self.auth_state == AuthStep::Authenticated {
+                    let _ = std::fs::remove_file("session.json");
                     self.auth_state = AuthStep::PhoneInput { buffer: String::new(), error: None };
-                    self.set_status("Switched to Auth Demo (S01)");
+                    self.set_status("Switched to Auth Gate (S01)");
                 } else {
+                    let _ = std::fs::write("session.json", "{\"authenticated\": true}");
                     self.auth_state = AuthStep::Authenticated;
                     self.set_status("Returned to Main Shell (S02)");
                 }

@@ -3,27 +3,27 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
 │                          ╭───────── TgTui Settings & Cheatsheet (S12) ──────────╮                          │
 │  📌  🌐  Rust Community Gro│--- Navigation ---                                    │                          │
 │   Alice: Check out Rat...│  Tab          Switch active pane (Folders -> Chats ->│                          │
-│                          │  j / k / ↑ / ↓Navigate items in active pane          │                          │
-│  🔇  📢  Telegram Desktop N│  1 .. 4       Switch chat folders (All, Personal, Gro│:                         │
+│                          │  j / k / ↑ / ↓Navigate items in active pane          │:                         │
+│  🔇  📢  Telegram Desktop N│  1 .. 4       Switch chat folders (All, Personal, Gro│                          │
 │   Major update release...│                                                      │                          │
-│                          │--- Messaging ---                                     │                          │
-│  📌  🔇  👤  Saved Messages │  Enter        Send message / Select item             │ clean-room...            │
-│   Notes: investigate M...│  r            Reply to selected message              │ **bold**, `code`, and    │
+│                          │--- Messaging ---                                     │ clean-room...            │
+│  📌  🔇  👤  Saved Messages │  Enter        Send message / Select item             │ **bold**, `code`, and    │
+│   Notes: investigate M...│  r            Reply to selected message              │                          │
 │                          │  e            Edit selected message (own)            │                          │
 │                          │  d            Delete selected message                │                          │
 │                          │  m            Open message context menu (S07)        │                          │
-│                          │  /            In-chat search (S10)                   │                          │
-│                          │  i            Chat profile & shared media (S05/S06)  │g the context menu.       │
+│                          │  /            In-chat search (S10)                   │g the context menu.       │
+│                          │  i            Chat profile & shared media (S05/S06)  │                          │
 │                          │  F1           Toggle Auth Gate Demo (S01)            │                          │
 │                          │                                                      │                          │
-│                          │Press [Esc] or [q] to close                           │                          │
-│                          ╰──────────────────────────────────────────────────────╯0] (compressed) [Enter:   │
-│                                 ││View Lightbox]                                                           │
+│                          │Press [Esc] or [q] to close                           │0] (compressed) [Enter:   │
+│                          ╰──────────────────────────────────────────────────────╯                          │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

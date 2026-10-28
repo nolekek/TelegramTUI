@@ -3,27 +3,27 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
-│                                 ││     [👋 : 4]                                                             │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
+│                                 ││                                                                         │
 │  📌  🌐  Rust Community╭─── Media Viewer Lightbox (S08) — architecture_diagram.png ───╮                      │
 │   Alice: Check out Ra│Resolution: 1920x1080 | Zoom: 100%                            │                      │
 │                      │                                                              │                      │
 │  🔇  📢  Telegram Deskt│┌──────────────────────────────────────────────┐              │                      │
 │   Major update releas││                  [ IMAGE ]                   │              │                      │
-│                      ││           High-Resolution Preview            │              │                      │
-│  📌  🔇  👤  Saved Messa││                                              │              │an-room...            │
-│   Notes: investigate │└──────────────────────────────────────────────┘              │old**, `code`, and    │
+│                      ││           High-Resolution Preview            │              │an-room...            │
+│  📌  🔇  👤  Saved Messa││                                              │              │old**, `code`, and    │
+│   Notes: investigate │└──────────────────────────────────────────────┘              │                      │
 │                      │                                                              │                      │
 │                      │ [o] Open in system default viewer / mpv                      │                      │
 │                      │ [s] Save to Downloads                                        │                      │
+│                      │                                                              │e context menu.       │
+│                      │[Esc] or [q] Close lightbox                                   │                      │
 │                      │                                                              │                      │
-│                      │[Esc] or [q] Close lightbox                                   │e context menu.       │
 │                      │                                                              │                      │
-│                      │                                                              │                      │
-│                      ╰──────────────────────────────────────────────────────────────╯                      │
-│                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
+│                      ╰──────────────────────────────────────────────────────────────╯compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

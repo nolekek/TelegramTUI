@@ -3,27 +3,27 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
-│                                 ││     [👋 : 4]                                                             │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
+│                                 ││                                                                         │
 │  📌  🌐  Rust Community Group ╭────────────── Pavel Durov (S05) ───────────────╮                             │
 │   Alice: Check out Rat...  1│● Status: Online                                │                             │
-│                             │Username: @durov                                │                             │
-│  🔇  📢  Telegram Desktop News│Bio: Building Telegram and decentralized tech.  │tes:                         │
+│                             │Username: @durov                                │tes:                         │
+│  🔇  📢  Telegram Desktop News│Bio: Building Telegram and decentralized tech.  │                             │
 │   Major update release...   │                                                │                             │
-│                             │--- Shared Media (S06) ---                      │                             │
-│  📌  🔇  👤  Saved Messages Mon│🖼 Photos: 14 items                              │Tui clean-room...            │
-│   Notes: investigate M...   │📄  Files: 3 documents (ratatui-guide.pdf)       │ith **bold**, `code`, and    │
+│                             │--- Shared Media (S06) ---                      │Tui clean-room...            │
+│  📌  🔇  👤  Saved Messages Mon│🖼 Photos: 14 items                              │ith **bold**, `code`, and    │
+│   Notes: investigate M...   │📄  Files: 3 documents (ratatui-guide.pdf)       │                             │
 │                             │🎤  Voice: 6 voice messages                      │                             │
 │                             │🔗  Links: 22 shared links                       │                             │
 │                             │                                                │                             │
-│                             │Press [Esc] or [q] to close                     │                             │
-│                             │                                                │ting the context menu.       │
+│                             │Press [Esc] or [q] to close                     │ting the context menu.       │
 │                             │                                                │                             │
 │                             │                                                │                             │
-│                             ╰────────────────────────────────────────────────╯                             │
-│                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
+│                             │                                                │                             │
+│                             ╰────────────────────────────────────────────────╯1080] (compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

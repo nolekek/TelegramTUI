@@ -86,6 +86,17 @@ pub fn render_composer_panel(f: &mut Frame, app: &AppCoordinator, theme: &Theme,
         .border_type(theme.border_type)
         .style(theme.composer_input(is_focused));
 
-    let input_widget = Paragraph::new(Line::from(text)).block(input_block);
+    // Calculate horizontal scroll offset so typing long text scrolls smoothly instead of clipping
+    let inner_width = input_area.width.saturating_sub(4) as usize;
+    let char_count = app.composer_buffer.chars().count();
+    let scroll_x = if char_count > inner_width {
+        (char_count - inner_width) as u16
+    } else {
+        0
+    };
+
+    let input_widget = Paragraph::new(Line::from(text))
+        .block(input_block)
+        .scroll((0, scroll_x));
     f.render_widget(input_widget, input_area);
 }

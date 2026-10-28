@@ -3,27 +3,27 @@
 │[All]  Personal   Groups   Channe│                                                                           
 ╰─────────────────────────────────╯───────────────────────────────────────────────────────────────────────────
 ╭ Chats ──────────────────────────╮╭ Conversation History ───────────────────────────────────────────────────╮
-│▶ 📌  👤  Pavel Durov 12:45        ││  Pavel Durov 12:40                                                      │
-│   Welcome to the TgTui...  2    ││    Hello! Welcome to the TgTui clean-room terminal client.              │
-│                                 ││     [👋 : 4]                                                             │
-│  📌  🌐  Rust Community Group 12:3││                                                                         │
-│   Alice: Check out Rat...  14   ││  Pavel Durov 12:42                                                      │
-│                          ╭──────────── Send File / Photo Attachment ────────────╮                          │
-│  🔇  📢  Telegram Desktop N│Enter file path on local disk:                        │:                         │
+│▶ 📌  👤  Pavel Durov 12:45        ││    Hello! Welcome to the TgTui clean-room terminal client.              │
+│   Welcome to the TgTui...  2    ││     [👋 : 4]                                                             │
+│                                 ││                                                                         │
+│  📌  🌐  Rust Community Group 12:3││  Pavel Durov 12:42                                                      │
+│   Alice: Check out Rat...  14   ││    🎤  Voice (0:18)  ▂▃▅▆▇▆▅▃▂  [p: play]                                │
+│                          ╭──────────── Send File / Photo Attachment ────────────╮:                         │
+│  🔇  📢  Telegram Desktop N│Enter file path on local disk:                        │                          │
 │   Major update release...│> C:/Screenshots/diagram.png█                         │                          │
-│                          │                                                      │                          │
-│  📌  🔇  👤  Saved Messages │[X] Compress photo (fast preview) (Press Tab to toggle│ clean-room...            │
-│   Notes: investigate M...│                                                      │ **bold**, `code`, and    │
+│                          │                                                      │ clean-room...            │
+│  📌  🔇  👤  Saved Messages │[X] Compress photo (fast preview) (Press Tab to toggle│ **bold**, `code`, and    │
+│   Notes: investigate M...│                                                      │                          │
 │                          │Type: Photo (JPG/PNG)                                 │                          │
 │                          │                                                      │                          │
 │                          │[Enter] Send Attachment | [Esc] Cancel                │                          │
-│                          │                                                      │                          │
 │                          │                                                      │g the context menu.       │
+│                          │                                                      │                          │
 │                          ╰──────────────────────────────────────────────────────╯                          │
-│                                 ││                                                                         │
 │                                 ││  Pavel Durov 12:46                                                      │
 │                                 ││    🖼 Photo: architecture_diagram.png [1920x1080] (compressed) [Enter:   │
 │                                 ││View Lightbox]                                                           │
+│                                 ││    Here is the architectural diagram of the system:                     │
 │                                 │╰─────────────────────────────────────────────────────────────────────────╯
 │                                 │╭ Message Composer ───────────────────────────────────────────────────────╮
 │                                 ││Checking out the clean-room terminal client! **bold**█                   │

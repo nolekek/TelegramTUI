@@ -38,6 +38,28 @@ impl UiActor {
         let backend = CrosstermBackend::new(stdout);
         let mut terminal = Terminal::new(backend)?;
 
+        // Dedicated OS thread for reading keyboard events without blocking or dropping.
+        // Filters strictly for KeyEventKind::Press to eliminate 2x-3x key repeats on Windows and Linux.
+        let (key_tx, mut key_rx) = mpsc::channel(64);
+        std::thread::spawn(move || {
+            loop {
+                match event::read() {
+                    Ok(Event::Key(key)) => {
+                        if key.kind == crossterm::event::KeyEventKind::Press {
+                            if key_tx.blocking_send(key).is_err() {
+                                break;
+                            }
+                        }
+                    }
+                    Ok(Event::Resize(_, _)) => {
+                        // Allow terminal resize events to wake the loop
+                    }
+                    Err(_) => break,
+                    _ => {}
+                }
+            }
+        });
+
         let tick_rate = Duration::from_millis(50);
         let mut running = true;
 
@@ -48,24 +70,24 @@ impl UiActor {
             })?;
 
             tokio::select! {
-                // Incoming TDLib backend events
+                biased;
+
+                // Priority 1: User keystrokes are processed instantly with zero input lag
+                Some(key) = key_rx.recv() => {
+                    if let Some(action) = Self::map_key_event(&self.app, key) {
+                        if !self.app.handle_user_action(action).await {
+                            running = false;
+                        }
+                    }
+                }
+
+                // Priority 2: Incoming TDLib backend events
                 Some(event) = self.tdlib_event_rx.recv() => {
                     self.app.handle_tdlib_event(event).await;
                 }
 
-                // Poll keyboard events with timeout
-                _ = tokio::time::sleep(tick_rate) => {
-                    while event::poll(Duration::from_millis(0))? {
-                        if let Event::Key(key) = event::read()? {
-                            if let Some(action) = Self::map_key_event(&self.app, key) {
-                                if !self.app.handle_user_action(action).await {
-                                    running = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+                // Priority 3: 20 FPS UI refresh tick
+                _ = tokio::time::sleep(tick_rate) => {}
             }
         }
 
